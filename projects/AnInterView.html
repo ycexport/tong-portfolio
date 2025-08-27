@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>An InterView | Frame-by-frame Animation</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=ABeeZee:ital@0;1&family=Abhaya+Libre:wght@800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css"/>
+</head>
+<body data-page="project">
+  <!-- 头部（沿用全站导航与图标） -->
+  <header class="site-header">
+    <div class="navwrap">
+      <a class="logo" href="/index.html" aria-label="Tong logo">
+        <img src="/TONGLOGO.svg" alt="Tong logo">
+      </a>
+      <nav id="mainnav" class="mainnav">
+        <div class="nav-indicator" id="navIndicator" aria-hidden="true"></div>
+        <a href="/index.html" data-key="reel"><em>Reel</em></a>
+        <a href="/works.html" data-key="works"><em>Works</em></a>
+        <a href="/storyboards.html" data-key="storyboards"><em>Storyboards</em></a>
+        <!-- <a href="/indie.html" data-key="indie"><em>Indie</em></a> -->
+        <a href="/about.html" data-key="about"><em>About</em></a>
+      </nav>
+      <div class="nav-sns">
+        <a href="https://www.instagram.com/ywbfyhnc/" target="_blank" aria-label="Instagram" class="icon-link">
+          <svg viewBox="0 0 24 24" width="18" height="18"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2" fill="#fff"/><circle cx="18" cy="6" r="1.6"/></svg>
+        </a>
+        <a href="https://www.linkedin.com/in/yutong-cheng-421ba737a" target="_blank" aria-label="LinkedIn" class="icon-link">
+          <svg viewBox="0 0 24 24" width="18" height="18"><path d="M4.98 3.5A2.5 2.5 0 1 1 0 3.5a2.5 2.5 0 0 1 4.98 0zM.5 8.5h4.9v12H.5zM9 8.5h4.7v1.9h.1c.7-1.3 2.3-2.6 4.7-2.6 5 0 5.9 3.3 5.9 7.6v5.6h-4.9v-5c0-1.2 0-2.7-1.6-2.7s-1.8 1.3-1.8 2.6v5.1H9z"/></svg>
+        </a>
+        <a href="mailto:yeveucheng@gmail.com" aria-label="Email" class="icon-link">
+          <svg viewBox="0 0 24 24" width="18" height="18"><path d="M2 5h20v14H2z" fill="none" stroke="currentColor"/><path d="M2 5l10 8 10-8"/></svg>
+        </a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <div id="mobileMenu" class="mobile-menu" hidden>
+      <a href="/index.html"><em>Reel</em></a>
+      <a href="/works.html"><em>Works</em></a>
+      <a href="/storyboards.html"><em>Storyboards</em></a>
+      <!-- <a href="/indie.html"><em>Indie</em></a> -->
+      <a href="/about.html"><em>About</em></a>
+      <div class="menu-sns">
+        <a href="https://www.instagram.com/ywbfyhnc/" target="_blank" aria-label="Instagram" class="icon-link"><svg viewBox="0 0 24 24" width="18" height="18"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2" fill="#fff"/><circle cx="18" cy="6" r="1.6"/></svg></a>
+        <a href="https://www.linkedin.com/in/yutong-cheng-421ba737a" target="_blank" aria-label="LinkedIn" class="icon-link"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M4.98 3.5A2.5 2.5 0 1 1 0 3.5a2.5 2.5 0 0 1 4.98 0zM.5 8.5h4.9v12H.5zM9 8.5h4.7v1.9h.1c.7-1.3 2.3-2.6 4.7-2.6 5 0 5.9 3.3 5.9 7.6v5.6h-4.9v-5c0-1.2 0-2.7-1.6-2.7s-1.8 1.3-1.8 2.6v5.1H9z"/></svg></a>
+        <a href="mailto:yeveucheng@gmail.com" aria-label="Email" class="icon-link"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M2 5h20v14H2z" fill="none" stroke="currentColor"/><path d="M2 5l10 8 10-8"/></svg></a>
+      </div>
+    </div>
+  </header>
+  <main>
+  <!-- 顶部：标题 + 元信息 + 概览 + 主视频 -->
+  <section class="container project-wrap">
+    <!-- 手机端蓝色标题 --> 
+    <h1 class="page-mobile-title blue  fade-up">An InterView</h1>
+
+    <!-- 桌面标题 & 副标题 -->
+    <h1 class="project-title  fade-up">An InterView</h1>
+    <h2 class="project-subtitle  fade-up">Frame-by-frame Animation</h2>
+
+    <!-- 元信息 + 概览 -->
+    <div class="project-desc  fade-up">
+      <ul class="project-meta">
+        <li><strong>Tools:</strong> TVPaint Animation, After Effects. </li>
+        <li><strong>Role:</strong> Writer, Director.</li>
+      </ul>
+      <img class="storyboard-img" src="/assets/AnInterView/poster.png" alt="poster">
+      <p>This 3-minute-long 2D frame-by-frame short is my SVA thesis film featured in 2025. The comedic animation follows a ghost who must pass a test similar to a job interview to decide if she can be reincarnated as a human. Through witty conversations, the film uses light humor to explore deep, existential questions.</p>
+        <video
+        class="card-vid storyboard-img autoplay-vid"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="auto"                                 <!-- ✅ 更积极预载，便于立刻播放 -->
+        poster="/assets/AnInterView/images/Testshot03.webp"  <!-- ✅ 用图片做封面，不要 mp4 -->
+        >
+        <source src="/assets/AnInterView/images/Testshot03.mp4"  type="video/mp4">
+        </video>
+        <video
+        class="card-vid storyboard-img autoplay-vid"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="auto"                                 <!-- ✅ 更积极预载，便于立刻播放 -->
+        poster="/assets/AnInterView/images/Testshot03.webp"  <!-- ✅ 用图片做封面，不要 mp4 -->
+        >
+        <source src="/assets/AnInterView/images/Testshot47.mp4"  type="video/mp4">
+        </video>
+      <img class="storyboard-img" src="/assets/AnInterView/images/14.webp" alt="poster">
+      <img class="storyboard-img" src="/assets/AnInterView/images/8.webp" alt="poster">
+      <img class="storyboard-img" src="/assets/AnInterView/images/11.webp" alt="poster">
+    </div>
+  </section>
+  <!-- Process -->
+  <section id="process3" class="container proj-section">
+    <h3 class="proj-h2 blue">Process</h3>
+    <!-- <div class="project-desc">
+      <p>I first planned shape the words into label and capsules. After a few tests, I realized it took viewers too long to recognize them, so I switched to simple, emoji-like icons to convey uneasse at a glance.</p>
+    </div> -->
+    <h3 class="proj-h3 align-with-media">Early Sketches</h3>
+    <img class="storyboard-img" src="/assets/AnInterView/earlypragonist.png" alt="earlypragonist">
+    <img class="storyboard-img" src="/assets/AnInterView/earlyinterviewer.png" alt="earlyinterviewer">
+    <img class="storyboard-img" src="/assets/AnInterView/earlyinterviewroom.png" alt="earlyinterviewroom">
+    <h3 class="proj-h3 align-with-media">Design</h3>
+    <img class="storyboard-img" src="/assets/AnInterView/ProtagonistLipSyncNew.PNG" alt="Sketches">
+    <img class="storyboard-img" src="/assets/AnInterView/InterviewerLipSyncNew.PNG" alt="Sketches">
+    <div class="project-desc">
+      <p>he story is strongly dialogue-driven, so I prepared lip-sync charts for both characters.</p>
+    </div>
+    <img class="storyboard-img" src="/assets/AnInterView/Protagonistlayersetting.png" alt="Sketches">
+    <div class="project-desc">
+      <p>In TVPaint, I used simple circles as the protagonist's head for clean-up animation. The fluffy head seen in the final film was composited in Adobe After Effects during the last stage of production. </p>
+    </div>
+    <h3 class="proj-h2 blue">Looking Forward...</h3>
+    <div class="project-desc">
+      <p>The film is now in festival submission! After the festival window, I'll make it available online. </p>
+    </div>
+    <nav class="project-pager" id="projectPager" aria-label="Project navigation"></nav>
+  </section>
+  </main>
+  <!-- Footer（沿用全站规则：上方 40px、底端 20px） -->
+  <footer class="site-footer">
+    <div class="foot-row">
+      <div class="foot-left">© 2025 by Yutong Cheng</div>
+      <div class="foot-right">
+        <a class="email-wrap" href="mailto:yeveucheng@gmail.com">
+          <svg viewBox="0 0 24 24" width="12" height="12"><path d="M2 5h20v14H2z" fill="none" stroke="currentColor"/><path d="M2 5l10 8 10-8"/></svg>
+          <span class="email">yeveucheng@gmail.com</span>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/script.js"></script>
+</body>
+</html>

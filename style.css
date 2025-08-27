@@ -1,0 +1,1816 @@
+:root{
+  --blue:#165CFF;
+  --text:#111;
+  --muted:#666;
+  --indicator:rgba(22,92,255,.5);
+  --skew:-12deg;                 /* 平行四边形高亮与斜体同倾角 */
+  --content-max:1280px;           /* 版心最大宽 */
+  --content-pad:24px;            /* 版心左右内边距 */
+  --reel-opacity-start: .1; /* 起始透明度：0.2~0.5 都可以，避免 0 */
+
+  /* 底部渐变（方案1：粉色多停靠点） */
+  --footer-h:90vh;               /* 渐变高度（只影响背景） */
+  --pink-tint-start:25%;         /* 粉色开始显现的位置 */
+  --pink-tint-strong:50%;        /* 粉色显著的位置 */
+  --pink-alpha-weak:0.1;        /* 初现时的透明度 */
+  --pink-alpha-strong:0.3;      /* 中段加重的透明度 */
+
+  /* Footer 文本（独立于渐变） */
+  --footer-text-bottom:24px;     /* Footer 文本距页面底部的固定距离 */
+  --footer-text-size:12px;
+
+  /* Motion 布局控制（响应式） */
+  --motion-gap-x: 120px;   /* 列间距（左右） */
+  --motion-gap-y: 90px;   /* 行间距（上下） */
+  --motion-section-top: 120px; /* 整个 Motion 区域离 header 的距离 */
+}
+
+/* 1) 可调数值（负值 = 向左挪） */
+:root{
+  --logo-nudge-desktop: -10px;  /* 桌面向左微移：先试 -10px，再按感觉调 */
+  --logo-nudge-mobile:  -20px;   /* 手机向左微移：先试 -8px，不要太贴边 */
+}
+
+/* 2) 桌面端向左挪 */
+@media (min-width: 769px){
+  .logo{ margin-left: var(--logo-nudge-desktop); }
+}
+
+/* 3) 手机端也向左挪 */
+@media (max-width: 768px){
+  .logo{ margin-left: var(--logo-nudge-mobile); }
+}
+
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"ABeeZee",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  color:var(--text);
+}
+
+/* —— 底部渐变（最底层背景，不影响布局） —— */
+body::after{
+  content:"";
+  position:fixed; left:0; right:0; bottom:0;
+  height:var(--footer-h);
+  background:linear-gradient(
+    180deg,
+    rgba(255,220,226,0) 0%,
+    rgba(255,220,226,var(--pink-alpha-weak)) var(--pink-tint-start),
+    rgba(255,220,226,var(--pink-alpha-strong)) var(--pink-tint-strong),
+    rgba(217, 222, 200,0.6) 100%
+  );
+  z-index:0; pointer-events:none;
+}
+
+/* —— 版心容器 —— */
+.container{
+  width:min(var(--content-max), 80vw);
+  margin:0 auto;
+  padding:0 var(--content-pad);
+  position:relative; z-index:1;
+}
+
+/* —— Header / Nav —— */
+.site-header{
+  position:sticky; top:0; background:#fff; z-index:5;
+  border-bottom:1px solid #e9eefc;
+}
+.navwrap{
+  width:min(var(--content-max),80vw);
+  margin:0 auto;
+  padding:12px var(--content-pad) 12px;  /* 更靠下：离分割线更近 */
+  display:flex; gap:18px; align-items:flex-end;
+  min-height:10vh;
+}
+.logo img{height:67px; display:block}    /* 桌面 logo 更大 */
+
+.mainnav{
+  position:relative; display:flex; gap:22px;
+  align-items:flex-end; margin-left:auto;
+  font-style:italic; font-weight:400; font-size:16px; line-height:1;
+}
+.mainnav a{
+  padding:6px 10px; color:var(--text);
+  text-decoration:none; position:relative;
+}
+.mainnav a:hover{color:var(--blue)}
+.nav-indicator{
+  position:absolute; top:50%;
+  transform:translateY(-50%) skewX(var(--skew));
+  height:28px; width:60px; background:var(--indicator);
+  transition:all .28s ease; z-index:-1;
+}
+
+/* 右侧 3 个 icon 与文字底线对齐 */
+.nav-sns{
+  display:flex; gap:14px; align-items:flex-end;
+}
+.nav-sns .icon-link svg{
+  fill:var(--blue); display:block;
+  transform:translateY(-5px);  /* 细调：贴到与文字最低处水平 */
+}
+
+/* —— 汉堡（仅手机显示） —— */
+.hamburger{
+  display:none; margin-left:auto;
+  background:none; border:0; cursor:pointer; padding:6px;
+}
+.hamburger span{
+  display:block; width:26px; height:3px; background:var(--blue);
+  margin:5px 0; border-radius:2px;
+}
+
+/* —— 手机下拉菜单 —— */
+.mobile-menu{
+  display:none; background:#fff; border-top:1px solid #e9eefc;
+  padding:10px var(--content-pad);
+  box-shadow:0 6px 18px rgba(0,0,0,.06); z-index:4;
+}
+.mobile-menu a{
+  display:block; padding:10px 0;
+  font-style:italic; font-weight:400; color:var(--text); text-decoration:none;
+}
+.mobile-menu .menu-sns{display:flex; gap:14px; padding-top:6px}
+
+/* —— Intro —— */
+.title{
+  font-family:"Abhaya Libre", serif; font-weight:800;
+  font-size:64px; line-height:1.16;
+  margin:56px 0 8px; text-align:center;
+}
+.title .blue{color:var(--blue)!important}
+.fullname{font-size:32px}
+
+.role{
+  margin:0 auto; font-size:19px; color:var(--text);
+  text-decoration:underline; text-decoration-color:var(--blue);
+  text-underline-offset:6px; width:fit-content; line-height:1.5; text-align:center;
+}
+.thanks{
+  margin:10px 0 22px; color:var(--muted);
+  font-size:14px; text-align:center; line-height:1.5;
+}
+.reel-label{
+  font-family:"Abhaya Libre", serif; font-weight:800;
+  margin:0 0 16px; text-align:center;
+}
+.reel-label .small{font-size:32px}
+.reel-label .big{font-size:50px; color:var(--blue)!important} /* REEL 强制蓝色 */
+.reel-label .finger{font-size:32px}
+
+/* —— Reel —— */
+.reel{padding:8px 0 40px}
+/* 16:9，自适应，无底色 */
+.reel-box{width:100%; aspect-ratio:16 / 9; background:transparent}
+.reel-box iframe{width:100%; height:100%; border:0; display:block;}
+
+/* 让 iframe 填满容器（如果还没加的话务必保留这条） */
+.reel-box iframe{width:100%; height:100%; border:0; display:block;}
+
+
+/* —— 仅 Reel 页用的手机 Motion 预览 —— */
+.mobile-motion{display:none; margin-top:var(--mobile-motion-gap)}
+.mobile-motion-title{
+  font-family:"Abhaya Libre", serif; font-weight:800;
+  color:var(--blue); margin:0 0 10px;
+}
+.mobile-motion-body{padding:0 4px}
+
+/* —— Footer 文本（固定在页面底部，不受渐变高度影响） —— */
+.site-footer{
+  position:fixed; left:50%; transform:translateX(-50%);
+  bottom:var(--footer-text-bottom);
+  width:min(var(--content-max),80vw); z-index:2;
+}
+.foot-row{
+  display:flex; align-items:center; justify-content:space-between;
+  font-size:var(--footer-text-size); color:#000;
+}
+.email-wrap{
+  display:inline-flex; align-items:center; gap:6px;
+  padding:2px 6px; border-radius:6px; transition:background .2s;
+}
+.email-wrap:hover{background:rgba(22,92,255,.12)}
+.email{color:#000; text-decoration:none}
+
+/* —— 响应式（≤768px） —— */
+@media (max-width:768px){
+  .logo img{height:40px}                              /* 手机 logo 更大，且不贴边 */
+  .navwrap{padding:12px var(--content-pad) 12px; min-height:auto}
+  .nav-sns{display:none}                              /* 3 个 icon 进下拉菜单 */
+  .mainnav{display:none}                              /* 隐藏桌面导航 */
+  .hamburger{display:block; margin-left:auto}
+
+  .title{font-size:48px; line-height:1.25; margin:28px 0 8px}
+  .fullname{display:block; font-size:28px}           /* 手机换行 */
+  .container{padding:0 16px}
+
+  .mobile-motion{display:block}
+}
+
+/* ===== Entrance animations on page load ===== */
+
+/* Intro (unchanged) */
+.intro{
+  opacity:0;
+  transform:translateY(-18px);
+  animation:introDrop .60s cubic-bezier(.2,.65,.2,1) .05s forwards;
+  will-change:opacity, transform;
+}
+@keyframes introDrop{ to{ opacity:1; transform:none; } }
+
+/* ✅ Reel: only move it up (no opacity on the container) */
+.reel{
+  position:relative;            /* needed for the overlay */
+  transform:translateY(24px);
+  animation:reelRise .70s cubic-bezier(.22,.72,.25,1) .25s forwards;
+  will-change:transform;
+}
+@keyframes reelRise{ to{ transform:none; } }
+
+/* Reel：上移 + 透明 clip 揭示 + 透明度从低到高 */
+.reel{
+  position:relative;
+  transform:translateY(24px);
+  clip-path:inset(30% 0 0 0);                    /* 先裁掉底部 30% */
+  opacity:var(--reel-opacity-start);             /* 起始偏透明 */
+  animation:reelEnter .80s cubic-bezier(.22,.72,.25,1) .25s forwards;
+  will-change:transform, clip-path, opacity;
+}
+@keyframes reelEnter{
+  to{
+    transform:none;
+    clip-path:inset(0 0 0 0);                    /* 展开为完整可见 */
+    opacity:1;                                   /* 渐入到不透明 */
+  }
+}
+
+/* iframe 仍然填满容器 */
+.reel-box iframe{ width:100%; height:100%; border:0; display:block; }
+
+/* 低动效：直接显示 */
+@media (prefers-reduced-motion: reduce){
+  .reel{
+    animation:none !important;
+    transform:none !important;
+    clip-path:inset(0 0 0 0) !important;
+    opacity:1 !important;
+  }
+}
+
+/* make sure the iframe always fills the box */
+.reel-box iframe{ width:100%; height:100%; border:0; display:block; }
+
+/* respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .intro{ animation:none !important; opacity:1 !important; transform:none !important; }
+  .reel{ animation:none !important; transform:none !important; }
+  .reel::after{ animation:none !important; opacity:0 !important; }
+}
+
+/* ===== MOTION (only) — keep other styles untouched ===== */
+
+/* 离 header 更远；左右边距沿用 .container，不变 */
+.motion-wrap{
+  padding-top: var(--motion-section-top);
+}
+
+/* 桌面：两列，卡片宽度自适应；gap 固定像素 */
+.motion-grid{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--motion-gap-x);
+  row-gap: var(--motion-gap-y);
+}
+
+/* 卡片充满网格单元；16:9；可放 GIF 或 <video> */
+.motion-card{
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #e9edf7; /* 需要透明可改 transparent */
+  border-radius: 0;     /* 无圆角、无投影，符合你“不要粗糙” */
+}
+.motion-card img,
+.motion-card video{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* 悬停/聚焦：左上标题 + 底部低透明白层 */
+.motion-overlay{ pointer-events: none; opacity: 0; transition: opacity .25s ease; }
+.motion-card:hover .motion-overlay,
+.motion-card:focus-within .motion-overlay{ opacity: 1; }
+
+.motion-title{
+  position: absolute; top: 10px; left: 10px;
+  font-family: "Abhaya Libre", serif;
+  font-weight: 800; font-size: 18px; color: #111;
+  background: rgba(255,255,255,.75);
+  padding: 6px 10px; border-radius: 4px;
+}
+.motion-bottom-tint{
+  position: absolute; left: 0; right: 0; bottom: 0;
+  height: 22%; background: rgba(255,255,255,.14);
+}
+
+/* 手机：一列；两侧留安全边距（继承 .container 的 16px）；gap 再大点 */
+@media (max-width:768px){
+  .motion-grid{
+    grid-template-columns: 1fr;
+    column-gap: 0;
+    row-gap: 80px;  /* 比桌面更大 */
+  }
+  .motion-title{ font-size: 16px; }
+}
+
+/* ========== Mobile 页标题（其他页面也可复用） ========== */
+.page-mobile-title{
+  display:none;
+}
+@media (max-width:768px){
+  .page-mobile-title{
+    display:block;
+    font-family:"Abhaya Libre", serif;
+    font-weight:800;
+    font-size:32px;
+    color:var(--blue);
+    margin:24px 0 12px;
+  }
+}
+
+/* ========== 修正：logo 左移对所有页面生效（更高优先级） ========== */
+@media (min-width:769px){
+  .site-header .logo{ margin-left: var(--logo-nudge-desktop) !important; }
+}
+@media (max-width:768px){
+  .site-header .logo{ margin-left: var(--logo-nudge-mobile) !important; }
+}
+
+/* 让不同页面滚动条出现/消失时，导航不左右抖动（统一保留滚动条空间） */
+html{ scrollbar-gutter: stable both-edges; }
+
+/* —— Mobile 标题：除 Reel 外的页面都可用 —— */
+.page-mobile-title{ display:none; }
+@media (max-width:768px){
+  .page-mobile-title{
+    display:block;
+    font-family:"Abhaya Libre", serif;
+    font-weight:800;
+    font-size:32px;
+    color:var(--blue);
+    text-align:center;        /* 居中 */
+    margin:32px 0 16px;       /* 默认与 nav 拉开一些 */
+  }
+  /* Motion 页单独调近一点（你说它太远了） */
+  .motion-wrap .page-mobile-title{ margin-top:16px; }
+}
+
+/* —— 全站 logo 左移对所有页面强制生效 —— */
+@media (min-width:769px){ .site-header .logo{ margin-left: var(--logo-nudge-desktop) !important; } }
+@media (max-width:768px){ .site-header .logo{ margin-left: var(--logo-nudge-mobile) !important; } }
+
+/* ================= MOTION PAGE ONLY ================= */
+/* 只在 Motion 页禁用你之前的底部大渐变，并把 footer 变成正常文档流底部 */
+body.page--motion::after{ display:none; }  /* 关闭 body::after 渐变（仅本页） */
+
+/* Sticky footer → 普通 footer（仅本页） */
+body.page--motion{
+  min-height:100vh;
+  display:flex; flex-direction:column;
+}
+body.page--motion main{ flex:1; }
+body.page--motion .site-footer{
+  position:static; left:auto; bottom:auto; transform:none;
+  width:min(var(--content-max), 80vw);   /* 继续与内容对齐 */
+  margin:0 auto;                         /* 居中 */
+}
+
+/* —— Motion 网格：两列（桌面）/一列（手机）；gap 固定像素 —— */
+.motion-wrap{ padding-top: var(--motion-section-top); }
+.motion-grid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));
+  column-gap:var(--motion-gap-x);
+  row-gap:var(--motion-gap-y);
+}
+@media (max-width:768px){
+  .motion-grid{
+    grid-template-columns:1fr;
+    column-gap:0;
+    row-gap:48px; /* 手机卡片更疏 */
+  }
+}
+
+/* 卡片：占满格子；16:9；GIF/VIDEO 均可 */
+.motion-card{
+  position:relative; display:block;
+  width:100%; aspect-ratio:16/9;
+  overflow:hidden; background:#e9edf7; /* 需要透明 → transparent */
+}
+.motion-card img, .motion-card video{
+  width:100%; height:100%; object-fit:cover; display:block;
+}
+
+/* 覆盖层：Hover/Focus 时整卡变亮 + 标题居中（去掉白色圆角底） */
+.motion-overlay{
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center; /* 居中标题 */
+  background:rgba(255,255,255,0);
+  opacity:0; pointer-events:none;
+  transition:background .25s ease, opacity .25s ease;
+}
+.motion-card:hover .motion-overlay,
+.motion-card:focus-within .motion-overlay{
+  background:rgba(255,255,255,.72); /* 整卡白色覆层 */
+  opacity:1;
+}
+.motion-title{
+  font-family:"Abhaya Libre", serif; font-weight:800;
+  font-size:18px; color:#111;
+  background:none;         /* ❌ 去掉白色圆角矩形 */
+  padding:0; border-radius:0;
+  text-align:center;
+}
+
+
+/* —— 统一保留滚动条空间，所有页面导航不再左右“挪” —— */
+html{ scrollbar-gutter:stable both-edges; }
+
+/* —— 变量：手机上 Reel → Motion 的间距、手机标题与 nav 的距离、页底安全区 —— */
+:root{
+  --mobile-motion-gap: 120px;          /* 手机：Reel 和 “Motion” 预览之间更远 */
+  --mobile-motion-title-gap: 28px;     /* 手机：各页面蓝色标题和 nav 的距离 */
+  --motion-section-top-m: 24px;        /* 手机：Motion 页离 nav 的距离（缩小） */
+  --footer-safe: 140px;                /* 页底留白，避免紧贴 footer 文本 */
+}
+
+/* —— 手机标题（所有除 Reel 外的页面公用），居中且与 nav 拉开 —— */
+@media (max-width:768px){
+  .page-mobile-title{
+    text-align:center;
+    margin: var(--mobile-motion-title-gap) 0 16px;
+  }
+  /* Motion 页单独调近：你说它之前太远了 */
+  .page--motion .motion-wrap .page-mobile-title{
+    margin-top: 16px;
+  }
+}
+
+/* —— Motion 页：仅这个页面把 footer 变成正常文档流，并与内容保留安全距离 —— */
+body.page--motion{
+  min-height:100vh;
+  display:flex; flex-direction:column;
+}
+body.page--motion main{ flex:1; padding-bottom: var(--footer-safe); }
+body.page--motion .site-footer{
+  position:static; left:auto; bottom:auto; transform:none;
+  width:min(var(--content-max),80vw); margin:0 auto;
+}
+/* 你之前在 Motion 页关闭大渐变，保持： */
+body.page--motion::after{ display:none; }
+
+/* —— Motion 页：手机把整体上边距调小，去掉那个“巨大 gap” —— */
+@media (max-width:768px){
+  .page--motion .motion-wrap{ padding-top: var(--motion-section-top-m); }
+}
+
+/* —— Mobile 的 Reel 下的 Motion 预览：整体更远、标题更远 —— */
+@media (max-width:768px){
+  .mobile-motion{ margin-top: var(--mobile-motion-gap); }
+  .mobile-motion-title{ margin: 12px 0 12px; } /* 标题自身再留一点 */
+}
+
+/* —— Motion 卡片：去掉链接下划线；标题真正居中，不带白色矩形 —— */
+.motion-card{ text-decoration:none; color:inherit; }
+.motion-overlay{
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,0);
+  opacity:0; pointer-events:none;
+  transition:background .25s ease, opacity .25s ease;
+}
+.motion-card:hover .motion-overlay,
+.motion-card:focus-within .motion-overlay{
+  background:rgba(255,255,255,.75);  /* 整卡白色覆层 */
+  opacity:1;
+}
+.motion-title{
+  font-family:"Abhaya Libre", serif; font-weight:800;
+  font-size:18px; color:#111;
+  background:none; padding:0; border-radius:0; /* 去圆角白底 */
+  text-align:center;
+}
+
+/* —— Motion 网格：手机与桌面都再给一点底部安全距离（双保险） —— */
+.motion-wrap{ padding-bottom: calc(var(--footer-safe) * .3); }
+
+.btn-more{
+  display:inline-block;
+  margin-top:14px;
+  font-style:italic;
+  color:var(--blue);
+  text-decoration:none;
+  border-bottom:1px solid var(--blue);
+}
+.btn-more:hover{ opacity:.85; }
+
+/* 统一：手机端页脚在最底部（不悬浮），页面不够高也会贴底 */
+@media (max-width:768px){
+  body{
+    min-height:100svh;
+    display:flex;
+    flex-direction:column;
+  }
+  main{ flex:1; }
+
+  /* 覆盖你原来的 fixed footer：手机端改为正常文档流底部 */
+  .site-footer{
+    position:static !important;
+    left:auto !important; bottom:auto !important; transform:none !important;
+    width:min(var(--content-max), 100vw);
+    margin:0 auto;
+    padding:12px var(--content-pad) 16px; /* 给 footer 自己一点内边距 */
+  }
+}
+
+/* Reel（index.html）上的手机 Motion 预览：整体更远、标题更远 */
+:root{
+  --mobile-motion-gap: 120px;      /* Reel → Motion 预览的距离（再远一点） */
+  --mobile-motion-title-gap: 36px; /* 蓝色“Motion”标题与导航的距离（再远一点） */
+}
+@media (max-width:768px){
+  .mobile-motion{ margin-top: var(--mobile-motion-gap); }
+  .mobile-motion-title{ margin: var(--mobile-motion-title-gap) 0 12px; }
+}
+
+/* 手机右下角蓝底圆角按钮（index 专用，不挡点击） */
+@media (max-width:768px){
+  .fab-more{
+    position:fixed; right:16px; bottom:88px;   /* 如需更高/更低，改 bottom 数值 */
+    z-index:3;
+    background:var(--blue);
+    color:#fff; text-decoration:none;
+    font: 500 14px/1 "ABeeZee", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    border-radius:999px;
+    padding:12px 16px;
+    box-shadow:0 10px 24px rgba(22,92,255,.25);
+    transition:transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+  }
+  .fab-more:active{ transform:translateY(1px); box-shadow:0 8px 18px rgba(22,92,255,.22); }
+}
+
+/* 保底：卡片链接不显示下划线（图片未加载时 alt 文本也不带下划线） */
+.motion-card{ text-decoration:none; color:inherit; }
+
+/* 覆盖层：整卡变白、标题正中（你已加过，留一次完整版本以防冲突） */
+.motion-overlay{
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,0);
+  opacity:0; pointer-events:none;
+  transition:background .25s ease, opacity .25s ease;
+}
+.motion-card:hover .motion-overlay,
+.motion-card:focus-within .motion-overlay{
+  background:rgba(255,255,255,.75);
+  opacity:1;
+}
+.motion-title{
+  font-family:"Abhaya Libre", serif; font-weight:800;
+  font-size:18px; color:#111;
+  background:none; padding:0; border-radius:0; text-align:center;
+}
+
+/* —— 手机：Reel 下的 Motion 标题更大 —— */
+@media (max-width:768px){
+  .mobile-motion-title{
+    font-size:30px;           /* 更大几个字号 */
+    line-height:1.1;
+  }
+}
+
+/* 统一按钮与页脚的安全距离 */
+:root{
+  --cta-gap-top: 30px;
+  --cta-gap-bottom-mobile: 96px;   /* 手机：按钮与页脚的距离 */
+  --cta-gap-bottom-desktop: 80px;  /* 桌面：按钮与页脚的距离 */
+}
+
+/* 右对齐按钮：与 .container 同宽度边界一致 */
+.cta-wrap{
+  display:flex;
+  justify-content:flex-end;  /* 右对齐 */
+  align-items:center;
+  margin-top: var(--cta-gap-top);
+  margin-bottom: var(--cta-gap-bottom-desktop);
+}
+
+/* 蓝底圆角白字，不做任何透明度处理 */
+.cta-more{
+  display:inline-block;
+  background:var(--blue);
+  color:#fff;
+  text-decoration:none;
+  font:600 14px/1 "ABeeZee", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  border-radius:999px;
+  padding:12px 18px;
+  box-shadow:0 10px 24px rgba(22,92,255,.18);
+  /* 不允许出现“发灰” */
+  opacity:1 !important;
+}
+.cta-more:hover,
+.cta-more:active{ opacity:1 !important; }  /* 保持纯不透明，去掉淡化 */
+
+/* 显示控制：桌面显 desktop 版，手机显 mobile 版 */
+.cta-more--desktop{ display:inline-block; }
+.cta-more--mobile{ display:none; }
+
+@media (max-width:768px){
+  .cta-wrap{
+    margin-bottom: var(--cta-gap-bottom-mobile); /* 与页脚留更大距离 */
+  }
+  .cta-more--desktop{ display:none; }
+  .cta-more--mobile{ display:inline-block; }
+}
+
+/* === Fixed footer 的安全区（index 等页面）=== */
+/* 让内容底部永远预留出空间，避免和固定 footer 重叠 */
+:root{
+  --footer-safe-desktop: 130px;  /* 桌面：内容底部到 footer 的最小安全距离 */
+  --footer-safe-mobile:  140px;  /* 手机：内容底部到 footer 的最小安全距离 */
+}
+
+/* 除了 motion 页（我们已把 footer 改成非 fixed），其它页都应用安全区 */
+body:not(.page--motion) main{ padding-bottom: var(--footer-safe-desktop); }
+@media (max-width:768px){
+  body:not(.page--motion) main{ padding-bottom: var(--footer-safe-mobile); }
+}
+
+/* === “See more in Motion” 按钮：右对齐、不透明、与 footer 保持额外间距 === */
+:root{
+  --cta-gap-top: 30px;
+  --cta-gap-bottom-desktop: 80px;  /* 按钮自身与 footer 的额外间距（在安全区之外） */
+  --cta-gap-bottom-mobile:  90px;
+}
+
+.cta-wrap{
+  display:flex;
+  justify-content:flex-end;           /* 右对齐，和右侧 icon 同边界（使用 .container） */
+  align-items:center;
+  margin-top: var(--cta-gap-top);
+  margin-bottom: var(--cta-gap-bottom-desktop);
+}
+@media (max-width:768px){
+  .cta-wrap{ margin-bottom: var(--cta-gap-bottom-mobile); }
+}
+
+/* 按钮本体：不做任何透明度处理 */
+.cta-more{
+  display:inline-block;
+  background:var(--blue);
+  color:#fff;
+  text-decoration:none;
+  font:600 14px/1 "ABeeZee",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  border-radius:999px;
+  padding:12px 18px;
+  box-shadow:0 10px 24px rgba(22,92,255,.18);
+  opacity:1 !important;                 /* 始终不透明 */
+}
+.cta-more:hover,
+.cta-more:active{ opacity:1 !important; }
+
+/* -----------------------------
+   Footer 统一：20px 底部留白 + 40px 顶部固定间距
+   ----------------------------- */
+:root{
+  --footer-bottom-gap: 20px;   /* footer 距离窗口底端 */
+  --footer-top-gap:    40px;   /* footer 与正文之间的固定间距 */
+}
+
+/* 用 Flex 把 footer 推到页底，同时预留 20px */
+html{ height:100%; }
+body{
+  min-height:100svh;
+  display:flex;
+  flex-direction:column;
+  padding-bottom: var(--footer-bottom-gap);
+}
+/* 正文撑开 */
+main{ flex:1; }
+
+/* footer 不再 fixed；所有页面统一为普通文档流 */
+.site-footer{
+  position: static !important;
+  left:auto !important; bottom:auto !important; transform:none !important;
+  width:min(var(--content-max), 80vw);
+  margin: var(--footer-top-gap) auto 0; /* 上 40px，左右居中 */
+}
+
+/* 若你之前给非 motion 页 main 额外加过 padding-bottom，这里清掉 */
+body:not(.page--motion) main{ padding-bottom: 0 !important; }
+
+/* -----------------------------
+   恢复 Motion 页的渐变背景
+   （我们之前把它关了，这里强制开启）
+   ----------------------------- */
+body.page--motion::after{ display:block !important; }
+
+/* -----------------------------
+   “See more in Motion” 按钮：右对齐且互斥显示
+   用外层 wrapper 区分：.cta-wrap--desktop / .cta-wrap--mobile
+   ----------------------------- */
+.cta-wrap{
+  display:flex;
+  justify-content:flex-end; /* 右对齐，与右侧 icon 同边界（.container 包裹） */
+  align-items:center;
+  margin-top:20px;
+  margin-bottom:0; /* footer 上方的 40px 间距由 .site-footer 控制 */
+}
+.cta-wrap--desktop{ display:flex; }
+.cta-wrap--mobile{  display:none; }
+
+@media (max-width:768px){
+  .cta-wrap--desktop{ display:none; }
+  .cta-wrap--mobile{  display:flex; }
+}
+
+/* 按钮样式：实心蓝底白字，不做透明度变化 */
+.cta-more{
+  display:inline-block;
+  background:var(--blue);
+  color:#fff;
+  text-decoration:none;
+  font:600 14px/1 "ABeeZee",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  border-radius:999px;
+  padding:12px 18px;
+  box-shadow:0 10px 24px rgba(22,92,255,.18);
+  opacity:1 !important;
+}
+.cta-more:hover,
+.cta-more:active{ opacity:1 !important; }
+
+/* 只针对这张卡片：标题用 nav 同款字体、蓝色、居中更大 */
+.motion-card--navfont .motion-title{
+  font-family: "ABeeZee", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  color: var(--blue);
+  font-size: 18px;          /* 比默认 18px 大一号 */
+  line-height: 1.1;
+  letter-spacing: .2px;
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  text-align: center;
+}
+
+/* 保证正中对齐（你的全局 .motion-overlay 已是居中，这里加一层保险） */
+.motion-card--navfont .motion-overlay{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 手机上稍微小一点，避免换行太多 */
+@media (max-width:768px){
+  .motion-card--navfont .motion-title{ font-size: 20px; }
+}
+
+/* 这张卡片的覆盖层占满全框，并在两轴上绝对居中 */
+.motion-card--navfont .motion-overlay{
+  position:absolute;
+  inset:0;                      /* 覆盖整个卡片 */
+  display:grid;
+  place-items:center;           /* 水平 + 垂直正中 */
+  pointer-events:none;          /* 不挡点击 */
+}
+
+/* 标题不要额外的 margin/背景，确保几行时也居中 */
+.motion-card--navfont .motion-title{
+  margin:0;
+  text-align:center;
+  line-height:1.15;
+  background:none;
+  padding:0;
+  border-radius:0;
+}
+
+/* 这张卡片：覆盖层占满 + 网格两轴居中 */
+.motion-card--navfont .motion-overlay{
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;    /* 水平+垂直正中 */
+  pointer-events:none;
+  opacity:0;
+  background:rgba(255,255,255,0);
+  transition:background .25s ease, opacity .25s ease;
+}
+.motion-card--navfont:hover .motion-overlay,
+.motion-card--navfont:focus-within .motion-overlay{
+  opacity:1;
+  background:rgba(255,255,255,.72);
+}
+
+/* 🔧 关键：把标题从绝对定位改回普通定位，才能被居中 */
+.motion-card--navfont .motion-title{
+  position:static !important;   /* 覆盖掉之前的 absolute/top/left */
+  margin:0;
+  font-family:"ABeeZee",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  font-style:normal;            /* 不要 italic */
+  font-weight:400;
+  color:var(--blue);
+  font-size:20px;
+  line-height:1.15;
+  background:none;
+  padding:0;
+  border:0;
+  text-align:center;
+}
+
+@media (max-width:768px){
+  .motion-card--navfont .motion-title{ font-size:20px; }
+}
+
+/* 第一行加粗，整体仍用 ABeeZee（不斜体）、蓝色并居中 */
+.motion-card--navfont .motion-title{
+  position:static !important;
+  margin:0;
+  font-family:"ABeeZee",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  font-style:normal;
+  color:var(--blue);
+  font-size:24px;             /* 可调大/小 */
+  line-height:1.15;
+  text-align:center;
+}
+.motion-card--navfont .motion-title .line1{ font-weight:600; }  /* 第一行加粗 */
+.motion-card--navfont .motion-title .line2{ font-weight:400; font-size:18px;   }
+
+@media (max-width:768px){
+  .motion-card--navfont .motion-title{ font-size:20px; }
+}
+
+
+/* ===== Project page (additive only) ===== */
+.project-wrap{ padding-top: 48px; } /* 距导航一点距离，可微调 */
+
+.project-title{
+  font-family:"Abhaya Libre", serif;
+  font-weight:800;
+  font-size:48px;
+  line-height:1.12;
+  color:var(--blue);
+  margin:0 0 6px;
+  text-align:center;
+}
+.project-subtitle{
+  font-family:"ABeeZee", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  font-style:italic;
+  font-size:20px;
+  color:var(--text);
+  text-align:center;
+  margin:0 0 20px;
+}
+
+.project-media{
+  width:100%;
+  aspect-ratio:16/9;
+  background:transparent;
+  overflow:hidden;
+  margin:0 auto 18px;
+}
+.project-video{ width:100%; height:100%; object-fit:cover; display:block; }
+
+.project-desc{
+  max-width:68ch;
+  margin:0 auto;
+  font-size:16px;
+  line-height:1.65;
+  color:var(--text);
+}
+
+/* 手机优化 */
+@media (max-width:768px){
+  .project-wrap{ padding-top: 24px; }
+  .project-title{ font-size:36px; }
+  .project-subtitle{ font-size:18px; margin-bottom:16px; }
+  .project-desc{ padding: 0 4px; }
+}
+
+/* 手机端只保留一个标题：隐藏桌面那组，保留 page-mobile-title */
+@media (max-width:768px){
+  .project-title,
+  .project-subtitle{ display:none; }
+}
+
+/* 副标题不加粗（桌面） */
+.project-subtitle{
+  font-weight:400;      /* 明确为常规，不加粗 */
+  font-style:italic;    /* 如果不想斜体，改成 normal */
+}
+
+/* Vimeo 自适应：容器 16:9，iframe 填满 */
+.project-media{
+  width:100%;
+  aspect-ratio:16 / 9;
+  background:transparent;
+  overflow:hidden;
+  margin:0 auto 18px;
+}
+.project-media iframe{
+  width:100%;
+  height:100%;
+  display:block;
+  border:0;
+}
+
+/* 文本介绍与视频左右齐平：占满容器宽度、去掉以前的 max-width */
+.project-desc{
+  width:100%;
+  max-width:none;   /* 取消 68ch 限制 */
+  margin:0;         /* 与视频保持同样的左右边界（由 .container 控制） */
+  font-size:16px;
+  line-height:1.65;
+  color:var(--text);
+}
+
+/* Project 详情：两行圆点列表 */
+.project-desc .project-meta{
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;              /* 自定义圆点 */
+}
+.project-desc .project-meta li{
+  position: relative;
+  margin: 6px 0;
+  padding-left: 1rem;            /* 给小圆点留位置 */
+  line-height: 1.6;
+  color: var(--text);
+}
+.project-desc .project-meta li::before{
+  content: "";
+  position: absolute;
+  left: 0; top: .7em;
+  width: .45em; height: .45em;
+  border-radius: 50%;
+  background: var(--blue);      /* 圆点跟随文字颜色 */
+  opacity: .9;
+}
+.project-desc .project-meta strong{ font-weight: 700; }
+
+
+/* 片名斜体（用 ABeeZee 正常字重，不要加粗） */
+.project-desc .work-title{
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* Local nav（章节内导航）：吸顶 pills */
+.local-nav{
+  position: sticky; top: calc(64px + 8px); /* 估算 header 高度，可微调 */
+  z-index: 3;
+  display: flex; gap: 10px; padding: 8px 0;
+  background: #fff; border-bottom: 1px solid #e9eefc;
+}
+.local-nav a{
+  font-family:"ABeeZee", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-style: italic; font-weight: 400; font-size: 14px;
+  color: var(--text); text-decoration: none;
+  padding: 8px 12px; border-radius: 999px; border: 1px solid rgba(0,0,0,.08);
+}
+.local-nav a:hover{ color: var(--blue); border-color: rgba(22,92,255,.25); }
+
+/* 章节标题（比主标题小一号，居中、蓝色） */
+.proj-h2{
+  font-family:"Abhaya Libre", serif; font-weight:800;
+  font-size:30px; line-height:1.15; text-align:center;
+  margin: 50px 0 25px;
+}
+
+.proj-h3{
+  font-family:"Abhaya Libre", serif; font-weight:300;
+  font-size:26px; line-height:1.15; text-align:center;
+  margin: 35px 0 25px;
+}
+/* 章节块：与上部分拉开距离 */
+.proj-section{ padding-top: 20px; }
+
+/* 媒体区与你主视频一致：16:9 自适应 */
+.project-media{ width:100%; aspect-ratio:16/9; overflow:hidden; background:transparent; margin:0 auto 14px; }
+.project-media iframe{ width:100%; height:100%; display:block; border:0; }
+
+/* 章节说明与 Process 画廊 */
+.proj-blurb{ text-align:center; margin: 0 0 12px; color: var(--text); }
+.process-gallery{ display:grid; grid-template-columns: 1fr; gap:14px; margin-bottom: 8px; }
+.process-gallery img{ width:100%; height:auto; display:block; object-fit:cover; }
+
+/* 结尾清单（你之前的点列样式可复用） */
+.credits{ margin-top: 20px; }
+
+/* 标题配色修正：强制为 165CFF */
+.process-title,
+.proj-h2 {
+  color: var(--blue) !important;
+}
+
+.proj-h3 {
+  color: var(--blue) !important;
+}
+
+/* ========== 修正项目页右偏（清掉 figure/blockquote 的默认外边距） ========== */
+.project-wrap figure,
+.proj-section figure,
+.credits      figure,
+.project-wrap blockquote,
+.proj-section blockquote {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* 媒体与图片强制贴齐容器，防止行内元素造成错位 */
+.project-wrap iframe,
+.proj-section iframe,
+.project-wrap img,
+.proj-section img,
+.project-wrap video,
+.proj-section video {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 0;
+}
+
+/* 如果你用了 <figcaption>，给个干净的样式（可留或删） */
+.project-wrap figcaption,
+.proj-section figcaption {
+  margin: 8px 0 0;
+  padding: 0;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted);
+  font-style: italic;   /* 不想斜体就改为 normal */
+}
+
+/* 章节容器保持与顶部一致的左右边界（防止某处丢了 container 导致不对齐） */
+.container.proj-section,
+.container.credits {
+  width: min(var(--content-max), 80vw);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--content-pad);
+  padding-right: var(--content-pad);
+}
+
+/* 1) 章节容器锁定与上方一致的左右边界 */
+.container.proj-section,
+.container.credits {
+  width: min(var(--content-max), 80vw);
+  margin-inline: auto;
+  padding-inline: var(--content-pad);
+  position: relative;
+}
+
+/* 2) 清掉在项目章节里最容易“带偏”的默认左右缩进 */
+.proj-section :where(figure, blockquote, ul, ol, li, p){
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+  text-indent: 0 !important;
+}
+
+/* 3) 媒体元素强制块级且贴齐容器 */
+.proj-section :where(iframe, video, img){
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  border: 0;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+
+/* 4) 若需要子弹列表，恢复为容器内对齐的圆点 */
+.proj-section ul{
+  list-style: disc inside;
+  margin: 8px 0;
+}
+.proj-section li{ line-height: 1.6; }
+
+/* 5) figure 的缺省左右 40px 要清掉 */
+.proj-section figure{ margin-inline: 0 !important; }
+
+/* 6) 标题居中但不产生额外缩进 */
+.proj-h2{
+  text-align: center;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.proj-h3{
+  text-align:center;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* 给 body 临时加 class="debug" */
+.debug .proj-section *{
+  outline: 1px dashed rgba(255,0,0,.25);
+}
+
+.project-media{ width:100%; aspect-ratio:16/9; overflow:hidden; }
+.project-media iframe{ width:100%; height:100%; display:block; border:0; }
+
+/* 让 <video> 和 <iframe> 都填满 16:9 容器 */
+.project-media{
+  width:100%;
+  aspect-ratio:16/9;
+  background:transparent;
+  overflow:hidden;
+  margin:0 auto 18px;
+}
+.project-media iframe,
+.project-media video{
+  width:100% !important;
+  height:100% !important;
+  display:block;
+  border:0;
+  object-fit:cover;   /* 视频按容器裁切，避免出现黑边 */
+  background:#000;    /* 没画面时的底色，可选 */
+}
+/* ========= 主视频 vs 小视频尺寸策略 ========= */
+
+/* 主视频（页面顶部）维持最大：铺满容器宽度 */
+.project-wrap .project-media{
+  width: 100%;
+}
+
+/* 章节内视频：缩小一些并居中（保证 16:9 已由你前面的样式负责） */
+:root{
+  --chapter-media-w: 70%;   /* 相对容器的宽度比例：改小就更小，比如 70% */
+  --chapter-media-max: 900px;/* 同时限制一个最大像素宽，避免太大 */
+}
+
+/* 视频盒子缩小并居中 */
+.proj-section .project-media{
+  width: min(var(--chapter-media-max), var(--chapter-media-w));
+  margin: 0 auto 18px;  /* 居中 + 与下方间距 */
+}
+
+/* 让章节的小段说明/流程图也与小视频同宽、同居中（可选，保持观感整齐） */
+.proj-section .proj-blurb,
+.proj-section .process-gallery{
+  width: min(var(--chapter-media-max), var(--chapter-media-w));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 手机端：全部回到满宽，以免显得太小 */
+@media (max-width:768px){
+  .proj-section .project-media,
+  .proj-section .proj-blurb,
+  .proj-section .process-gallery{
+    width: 100%;
+  }
+}
+
+/* ——主视频：始终满容器—— */
+.project-wrap .project-media{ width:100%; }
+
+/* ——章节小视频：只在桌面/平板变窄并居中—— */
+:root{
+  --chapter-media-w: 78%;     /* 章节视频相对容器宽度，可改 70~85% */
+  --chapter-media-max: 900px;  /* 最大像素宽度上限 */
+}
+@media (min-width: 769px){
+  .proj-section .project-media,
+  .proj-section .proj-blurb,
+  .proj-section .process-gallery{
+    width: min(var(--chapter-media-max), var(--chapter-media-w));
+    margin-left:auto;
+    margin-right:auto;
+  }
+}
+
+/* ——手机端：一律满宽（用 !important 压过任何早先的规则）—— */
+@media (max-width: 768px){
+  .project-wrap .project-media,
+  .proj-section .project-media,
+  .proj-section .proj-blurb,
+  .proj-section .process-gallery{
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+}
+
+.container.project-wrap,
+.container.proj-section{ width: min(var(--content-max), 80vw); }
+
+.project-media iframe,
+.project-media video{
+  width:100% !important;
+  height:100% !important;
+  display:block;
+  object-fit:cover;
+}
+
+/* === Mobile：统一所有项目页容器的左右内边距，与主视频保持一致 === */
+@media (max-width: 768px){
+  .container.project-wrap,
+  .container.proj-section,
+  .container.credits{
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    /* 可选：如果你希望两者宽度策略也绝对一致，就加上这一句 */
+    width: min(var(--content-max), 80vw);
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* 文本块与小视频同宽：块级、居中，但文字左对齐 */
+.proj-section .proj-blurb{
+  width: min(var(--chapter-media-max), var(--chapter-media-w));
+  margin: 12px auto 16px;
+}
+@media (max-width:768px){
+  .proj-section .proj-blurb{ width: 100%; margin: 12px 0 16px; }
+}
+
+/* 段内样式：左对齐、行高/间距、无首行缩进 */
+.proj-blurb p{
+  margin: 0 0 10px;
+  line-height: 1.7;
+  text-align: left !important;
+  text-indent: 0 !important;
+}
+
+/* 保险：把你早先的“居中文本”覆盖掉 */
+.proj-blurb{ text-align: left !important; }
+
+/* 标题默认仍居中 */
+.proj-h3{
+  font-family:"Abhaya Libre", serif; font-weight:300;
+  font-size:24px; line-height:1.15; text-align:center;
+  margin:35px 0 25px;
+}
+
+/* 让标题与章节“小视频/画廊”同宽并左对齐 */
+.proj-h3.align-with-media{
+  width: min(var(--chapter-media-max), var(--chapter-media-w));
+  margin: 35px auto 14px;   /* 水平居中容器，但文本左对齐 */
+  text-align:left;
+}
+
+/* 让这张 Storyboard 图片也占同样的宽度、并铺满 */
+.storyboard-img{
+  width: min(var(--chapter-media-max), var(--chapter-media-w));
+  margin: 0 auto 16px;
+  display:block;
+  height:auto;
+}
+
+/* === Mobile：让 Reel 和 Motion 预览用完全相同的左右边距 === */
+@media (max-width: 768px){
+
+  /* 统一手机端容器的左右内边距（和 Reel 一样） */
+  :root{ --content-pad-mobile: 16px; } /* 你可改为 20/24，看自己喜好 */
+  .container{
+    padding-left: var(--content-pad-mobile) !important;
+    padding-right: var(--content-pad-mobile) !important;
+  }
+
+  /* Motion 预览本身不要再套额外 padding/margin */
+  .mobile-motion{
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .mobile-motion .motion-grid{
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* 卡片填满容器（避免自己再留边） */
+  .mobile-motion .motion-card{
+    width: 100%;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* 如存在这个旧规则，强制清零，避免多 4px 导致看起来更窄 */
+  .mobile-motion-body{ padding: 0 !important; }
+}
+
+/* 与章节“小视频”同宽的标题（你已有） */
+.proj-h3.align-with-media{
+  width: min(var(--chapter-media-max), var(--chapter-media-w));
+  margin: 28px auto 12px;  /* 上下间距可按需微调 */
+  text-align: left;
+}
+
+/* 让视频块与图片块的“竖向间距”完全一致 */
+:root{ --proc-gap: 16px; } /* 想更松就调 20px/24px */
+
+#process3 .storyboard-img{
+  display: block;
+  width: min(var(--chapter-media-max), var(--chapter-media-w));
+  height: auto;
+  margin: 0 auto var(--proc-gap);
+}
+
+#process3 .project-media{
+  width: min(var(--chapter-media-max), var(--chapter-media-w));
+  margin: 0 auto var(--proc-gap);     /* ✅ 同一个 gap */
+  aspect-ratio: 16 / 9;               /* 可选：保持 16:9 视频盒 */
+  overflow: hidden;
+}
+
+/* 兜底：让 media 内部元素填满盒子 */
+#process3 .project-media video,
+#process3 .project-media iframe{
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  border: 0;
+}
+
+/* 让 video 这张“storyboard-img”也按 16:9 填充 */
+video.storyboard-img{
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+/* ===== Works：卡片入场动效 ===== */
+:root{
+  --card-enter-distance: 24px;     /* 起始下移距离 */
+  --card-stagger: 90ms;            /* 每张卡片的阶梯延迟 */
+}
+
+.motion-grid .motion-card{
+  opacity: 0;
+  transform: translateY(var(--card-enter-distance));
+  will-change: transform, opacity;
+}
+
+.motion-grid .motion-card.in-view{
+  animation: cardRise .65s cubic-bezier(.22,.72,.25,1) forwards;
+  animation-delay: calc(var(--i, 0) * var(--card-stagger));
+}
+
+@keyframes cardRise{
+  to{ opacity:1; transform:none; }
+}
+
+/* 低动效偏好：直接展示，无动画 */
+@media (prefers-reduced-motion: reduce){
+  .motion-grid .motion-card{ opacity:1; transform:none; animation:none !important; }
+}
+
+/* ===== 详情页底部翻页 ===== */
+.project-pager{
+  width: min(var(--content-max), 80vw);
+  margin: 40px auto 80px;          /* 与正文/页脚的间距 */
+  padding-top: 16px;
+  border-top: 1px solid #e9eefc;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.project-pager a{
+  text-decoration: none;
+  color: var(--text);
+  background: #fff;
+  border: 1px solid #e9eefc;
+  border-radius: 10px;
+  padding: 12px 14px;
+  box-shadow: 0 10px 22px rgba(0,0,0,.06);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.project-pager a:hover{ border-color: rgba(22,92,255,.25); }
+
+.project-pager .label{ font-size:12px; color: var(--muted); }
+.project-pager .title{ font-weight:700; }
+.project-pager .prev  { justify-self: start; }
+.project-pager .next  { justify-self: end;  text-align: right; }
+.project-pager .back  { align-self: center; padding: 10px 16px; background: var(--blue); color:#fff; border-color: transparent; }
+
+@media (max-width: 768px){
+  .project-pager{
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .project-pager .next{ text-align:left; }
+}
+
+/* === compact overrides === */
+
+/* 1) Works 卡片入场动效：更轻、更快 */
+:root{
+  --card-enter-distance: 14px;   /* 原 24px → 更小的上移距离 */
+  --card-stagger: 70ms;          /* 原 90ms → 略快 */
+}
+@keyframes cardRise{ to{ opacity:1; transform:none; } } /* 保持 */
+
+/* 2) 详情页底部翻页：紧凑版 */
+.project-pager{
+  margin: 28px auto 48px;        /* 原 40/80 → 更紧凑 */
+  gap: 8px;                      /* 原 12 → 8 */
+  padding-top: 10px;             /* 原 16 → 10 */
+  border-top: 1px solid #eef3ff; /* 更细一点 */
+  opacity: 90%;
+}
+
+.project-pager a{
+  padding: 8px 10px;             /* 原 12/14 → 更小 */
+  border-radius: 8px;            /* 原 10 → 8 */
+  box-shadow: 0 6px 14px rgba(0,0,0,.05); /* 更轻的阴影 */
+}
+
+.project-pager .label{ font-size: 11px; }  /* 原 12 → 11 */
+.project-pager .title{ font-size: 14px; }  /* 新增：控制标题字级 */
+
+.project-pager .back{
+  padding: 8px 12px;             /* 原 10/16 → 更小 */
+  font-size: 13px;               /* 新增：按钮字级更小 */
+}
+
+/* 手机端再小一点（可选） */
+@media (max-width: 768px){
+  .project-pager{
+    margin: 22px auto 38px;
+    gap: 6px;
+  }
+  .project-pager a{ padding: 8px 10px; }
+  .project-pager .title{ font-size: 13px; }
+  .project-pager .back{ padding: 8px 12px; font-size: 12.5px; }
+}
+
+/* 可调间距变量 */
+:root{
+  --works-gap-top: 200px;   /* Works 卡片区与上方的距离（桌面） */
+  --pager-gap-top: 100px;   /* 详情页底部“上一条/返回/下一条”与上方的距离（桌面） */
+}
+@media (max-width: 768px){
+  :root{
+    --works-gap-top: 28px;   /* 手机 */
+    --pager-gap-top: 28px;   /* 手机 */
+  }
+}
+
+/* Works 列表页：让卡片网格和上面拉开距离 */
+body[data-page="motion"] .motion-grid{
+  margin-top: var(--works-gap-top);
+}
+
+/* 项目详情页：底部翻页组件和上面拉开距离 */
+body[data-page="project"] .project-pager{
+  margin-top: var(--pager-gap-top);
+}
+
+.staytuned{
+  margin-top: 50px;
+  font-size: 25px;
+  color:var(--blue)
+}
+
+/* ===== Project pager 居中对齐但保留原样式（不丢内边距、阴影等） ===== */
+/* 父容器是 .container(project-wrap)，它有 padding-inline: var(--content-pad)
+   这里用负外边距把这层 padding 抵消掉，再把宽度扩回去，视觉上就与上方内容完全对齐 */
+.project-wrap > .project-pager{
+  /* 上下外边距保持你自己的设置；左右用负值抵消父容器的 padding */
+  margin: var(--pager-gap-top, 40px) calc(-1 * var(--content-pad)) 64px;
+  width: calc(100% + 2 * var(--content-pad)); /* 把被抵消的宽度补回来 */
+
+  /* 其余属性都用你原来的（grid、gap、padding、阴影……都别改）*/
+}
+
+/* 手机端父容器左右是 16px（按你站点设置），相应做抵消 */
+@media (max-width: 768px){
+  .project-wrap > .project-pager{
+    margin-left: -16px;
+    margin-right: -16px;
+    width: calc(100% + 32px);
+  }
+}
+
+/* ===== About page ===== */
+
+.about-wrap{
+  padding-top: 100px;                 /* 与导航拉开距离 */
+}
+
+.about-title{
+  font-family: "Abhaya Libre", serif;
+  font-weight: 800;
+  font-size: 40px;
+  line-height: 1.1;
+  margin: 0 0 22px;
+  text-align: center;
+  color: var(--blue);
+}
+
+.about-grid{
+  display: grid;
+  grid-template-columns: 0.95fr 1.35fr;   /* 左头像略窄，右文本略宽 */
+  gap: 40px 56px;
+  align-items: start;
+}
+
+/* 头像卡片 */
+.about-photo{
+  margin: 0;
+  position: sticky; top: 110px;          /* 桌面小小的跟随（可去掉） */
+  align-self: start;
+}
+.about-photo img{
+  width: 100%;
+  max-width: 360px;                       /* 桌面头像最大尺寸 */
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 16px;
+  display: block;
+  box-shadow: 0 12px 28px rgba(0,0,0,.12);
+}
+
+/* 文本区 */
+.about-text{ font-size: 16px; line-height: 1.75; color: var(--text); }
+.about-hello{
+  font-family: "Abhaya Libre", serif;
+  font-weight: 800;
+  font-size: 28px;
+  line-height: 1.2;
+  margin: 0 0 6px;
+}
+.about-role{
+  margin: 0 0 14px;
+  color: var(--text);
+}
+.about-role .uline{
+  text-decoration: underline;
+  text-underline-offset: 6px;
+  text-decoration-color: var(--blue);
+}
+.about-lead{
+  font-size: 17px;
+  color: var(--text);
+  margin: 8px 0 10px;
+}
+
+/* CTA 按钮 */
+.btn{
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 10px 16px; border-radius: 999px;
+  font-size: 14px; text-decoration: none;
+  transition: transform .15s ease, box-shadow .15s ease;
+  border: 1px solid rgba(0,0,0,.08);
+  margin-right: 10px;
+}
+.btn.solid{ background: var(--blue); color:#fff; border-color: transparent; }
+.btn.ghost{ background:#fff; color: var(--text); }
+.btn:hover{ transform: translateY(-1px); box-shadow: 0 8px 18px rgba(0,0,0,.08); }
+
+/* ===== Responsive ===== */
+@media (max-width: 980px){
+  .about-grid{
+    grid-template-columns: 1fr;          /* 一列 */
+    gap: 24px;
+  }
+  .about-photo{
+    position: static;                     /* 移动端不 sticky */
+    text-align: center;
+  }
+  .about-photo img{
+    max-width: 280px;
+    margin: 0 auto;
+  }
+  .about-text{
+    text-align: left;
+  }
+}
+
+/* 进场小动效（可选） */
+.about-grid{
+  opacity: 0; transform: translateY(12px);
+  animation: aboutEnter .48s cubic-bezier(.2,.7,.2,1) .06s forwards;
+}
+@keyframes aboutEnter{
+  to{ opacity:1; transform:none; }
+}
+
+/* ===== Unify pill buttons: size, weight & states ===== */
+.btn{
+  --btn-pad-x: 20px;
+  --btn-pad-y: 12px;
+  display:inline-flex; align-items:center; justify-content:center;
+  gap:8px;
+  padding:var(--btn-pad-y) var(--btn-pad-x);
+  min-height:44px;                     /* 统一高度 */
+  border-radius:999px;
+  font-size:15px; font-weight:600;     /* 提升字重，视觉更均衡 */
+  line-height:1;
+  border:1.5px solid transparent;      /* 统一描边厚度 */
+  transition:background .15s ease, color .15s ease,
+             border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+}
+
+/* 蓝底白字（Email me） */
+.btn.solid{
+  background:var(--blue);
+  color:#fff;
+  box-shadow:0 6px 16px rgba(22,92,255,.22);
+}
+.btn.solid:hover{
+  transform:translateY(-1px);
+  box-shadow:0 10px 22px rgba(22,92,255,.28);
+}
+
+/* 浅蓝底 + 更实的描边（Resume） */
+.btn.ghost{
+  color:var(--blue);
+  background:rgba(22,92,255,.08);      /* 给一点填充，别太“轻” */
+  border-color:rgba(22,92,255,.38);
+}
+.btn.ghost:hover{
+  background:rgba(22,92,255,.12);
+  border-color:rgba(22,92,255,.55);
+  transform:translateY(-1px);
+}
+
+/* 按钮里的小图标（如果有） */
+.btn svg{
+  width:16px; height:16px; margin-right:6px;
+}
+
+/* 放到 style.css 末尾即可 */
+:root{
+  /* 调小就把中间的 22vw 或上限 260px 再降一点 */
+  --about-photo-size-desktop: clamp(160px, 22vw, 260px);
+  --about-photo-size-mobile:  clamp(120px, 38vw, 180px);
+}
+
+.about-photo{
+  width: var(--about-photo-size-desktop);
+  height: var(--about-photo-size-desktop);
+  object-fit: cover;          /* 保持构图 */
+  border-radius: 14px;        /* 你的圆角/圆形可在这里改 */
+  flex: 0 0 auto;             /* 避免被 flex 拉伸 */
+  max-width: 100%;
+}
+
+@media (max-width: 768px){
+  .about-photo{
+    width: var(--about-photo-size-mobile);
+    height: var(--about-photo-size-mobile);
+  }
+}
+/* 放到 style.css 末尾即可 */
+:root{
+  /* 调小就把中间的 22vw 或上限 260px 再降一点 */
+  --about-photo-size-desktop: clamp(160px, 24vw, 350px);
+  --about-photo-size-mobile:  clamp(120px, 38vw, 180px);
+}
+
+.about-photo{
+  width: var(--about-photo-size-desktop);
+  height: var(--about-photo-size-desktop);
+  object-fit: cover;          /* 保持构图 */
+  border-radius: 14px;        /* 你的圆角/圆形可在这里改 */
+  flex: 0 0 auto;             /* 避免被 flex 拉伸 */
+  max-width: 100%;
+}
+
+@media (max-width: 768px){
+  .about-photo{
+    width: var(--about-photo-size-mobile);
+    height: var(--about-photo-size-mobile);
+  }
+}
+
+/* ===== About typography scale (only About section) ===== */
+:root{
+  /* 调整这三个变量即可快速整体变大/变小 */
+  --about-h2-size:  clamp(32px, 3.2vw, 44px);   /* Hello! 标题 */
+  --about-lead-size:clamp(18px, 1.45vw, 21px);  /* about-lead 段落 */
+  --about-p-size:   clamp(17px, 1.35vw, 20px);  /* 其他段落/行内 */
+}
+
+.about-text{
+  max-width: 62ch;                 /* 文字行宽更舒服 */
+}
+
+.about-hello{
+  font-family: "Abhaya Libre", serif;
+  font-weight: 800;
+  font-size: var(--about-h2-size);
+  line-height: 1.2;
+  margin: 0 0 10px;
+}
+
+.about-role{                       /* 名字这一行 */
+  font-size: var(--about-p-size);
+  margin: 0 0 14px;
+}
+.about-role a,
+.about-role .uline{ font-weight: 600; text-underline-offset: 4px; }
+
+.about-lead{                       /* 主要两段介绍 */
+  font-size: var(--about-lead-size);
+  line-height: 1.85;
+  margin: 0 0 14px;
+}
+
+.about-text p{                     /* 其他普通段落 */
+  font-size: var(--about-p-size);
+  line-height: 1.85;
+  margin: 0 0 12px;
+}
+
+/* 按钮也稍微加大，匹配文字比例 */
+.about-cta .btn{
+  font-size: 16px;
+  padding: 12px 20px;
+  min-height: 44px;
+}
+
+/* 只作用于 About 文本区域的链接样式 */
+.about-text .about-link{
+  color: #111;                 /* 黑色 */
+  font-weight: 600;            /* 稍微加粗；想要普通就改 500/400 */
+  text-decoration: underline;  /* 保留可访问性的下划线 */
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1.5px;
+}
+
+/* 访问过也保持黑色 */
+.about-text .about-link:visited{
+  color: #111;
+}
+
+/* 悬停/聚焦时给点反馈：只变下划线颜色，不变文字颜色 */
+.about-text .about-link:hover,
+.about-text .about-link:focus{
+  text-decoration-color: var(--blue);
+}
+
+/* 键盘可访问性（可选） */
+.about-text .about-link:focus-visible{
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* —— 如果你想更粗：把上面 font-weight 改成 700，或启用这一条 —— */
+/* .about-text .about-link{ font-weight:700; } */
+
+/* 统一的入场：淡入 + 轻微上移 */
+.fade-up {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity .36s ease,
+    transform .36s cubic-bezier(.22,.72,.25,1);
+  will-change: opacity, transform;
+}
+.fade-up.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* 卡片“错峰”容器（可选） */
+.stagger > * {
+  opacity: 0;
+  transform: translateY(12px);
+}
+.stagger.is-in > * {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity .34s ease,
+    transform .34s cubic-bezier(.22,.72,.25,1);
+}
+
+/* 移动端更轻一点 */
+@media (max-width: 768px){
+  .fade-up, .stagger > * { transform: translateY(8px); }
+}
+
+/* 尊重减少动效 */
+@media (prefers-reduced-motion: reduce){
+  .fade-up, .stagger > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
